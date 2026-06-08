@@ -1,0 +1,18 @@
+# API Keys
+.env
+
+# Vector database and file storage
+chroma_db/
+docstore/
+extracted_images/
+ingested_files.json
+
+# Python
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
+
+# PDFs (don't commit sensitive PDFs to GitHub)
+*.pdf
