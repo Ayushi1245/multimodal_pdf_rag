@@ -26,167 +26,389 @@ st.set_page_config(
 st.markdown(
     """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
-    /* ── Global ─────────────────────────────────────────── */
+    /* ── Background image with blur ── */
     .stApp {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Outfit', sans-serif;
+        background: transparent !important;
     }
 
-    /* ── Header ─────────────────────────────────────────── */
-    .app-header {
-        text-align: center;
-        padding: 2rem 0 1rem;
+    .stApp::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url('https://i.pinimg.com/vwebp/1200x/33/79/93/33799327b6f6e6a9f264350e9484d302.webp');
+        background-size: cover;
+        background-position: center;
+        filter: blur(3px) brightness(1.05);
+        transform: scale(1.04);
+        z-index: -1;
     }
-    .app-header h1 {
-        font-size: 2.4rem;
+
+    .stApp::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 220, 235, 0.2);
+        z-index: -1;
+    }
+
+    /* ── Hide default Streamlit chrome ── */
+    [data-testid="stHeader"]        { visibility: hidden; }
+    [data-testid="stToolbar"]       { visibility: hidden; }
+    [data-testid="stAppDeployButton"] { display: none; }
+
+    /* ── Markdown text colour ── */
+    .stMarkdown p, .stMarkdown li { color: #C2E5F7 !important; }
+
+    /* ── Sidebar ── */
+    section[data-testid="stSidebar"] {
+        background: rgba(255, 255, 255, 0.35) !important;
+        backdrop-filter: blur(22px) !important;
+        -webkit-backdrop-filter: blur(22px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 4px 0 24px rgba(255, 120, 180, 0.08);
+    }
+
+    .sidebar-header {
+        font-size: 10px;
         font-weight: 700;
-        background: linear-gradient(135deg, #a78bfa, #818cf8, #6366f1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.25rem;
-    }
-    .app-header p {
-        color: #94a3b8;
-        font-size: 1.05rem;
-        font-weight: 300;
+        color: #C2E5F7;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin: 1.2rem 0 0.5rem;
     }
 
-    /* ── Stat Cards ─────────────────────────────────────── */
+    /* ── Buttons ── */
+    div[data-testid="stButton"] button {
+        background: linear-gradient(135deg, #ff80ab, #f06292) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 16px rgba(255, 100, 150, 0.35) !important;
+        transition: all 0.2s !important;
+        font-family: 'Outfit', sans-serif !important;
+    }
+
+    div[data-testid="stButton"] button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 22px rgba(255, 100, 150, 0.5) !important;
+        opacity: 0.93 !important;
+    }
+
+    div[data-testid="stButton"] button * { color: white !important; }
+
+    /* ── Delete button (sidebar col 2) — small red pill ── */
+    section[data-testid="stSidebar"] div[data-testid="column"]:nth-child(2) div[data-testid="stButton"] button {
+        background: rgba(255, 200, 210, 0.6) !important;
+        border: 1px solid rgba(220, 80, 100, 0.35) !important;
+        box-shadow: none !important;
+        color: #C2E5F7 !important;
+        border-radius: 6px !important;
+        padding: 2px 7px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="column"]:nth-child(2) div[data-testid="stButton"] button:hover {
+        background: rgba(220, 80, 100, 0.2) !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="column"]:nth-child(2) div[data-testid="stButton"] button * {
+        color: #C2E5F7 !important;
+    }
+
+    /* ── Clear Index button ── */
+    section[data-testid="stSidebar"] div[data-testid="stButton"]:last-of-type button {
+        background: rgba(255, 210, 220, 0.55) !important;
+        border: 1px solid rgba(220, 80, 100, 0.3) !important;
+        box-shadow: none !important;
+        color: #C2E5F7 !important;
+    }
+
+    /* ── File Uploader ── */
+    div[data-testid="stFileUploader"] {
+        background: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(12px);
+        border: 1.5px dashed rgba(255, 128, 171, 0.55) !important;
+        border-radius: 14px !important;
+        padding: 1rem !important;
+        transition: all 0.2s;
+    }
+
+    div[data-testid="stFileUploader"] *,
+    div[data-testid="stFileUploader"] section {
+        color: #C2E5F7 !important;
+    }
+
+    div[data-testid="stFileUploader"] section,
+    div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] {
+        background: rgba(255, 255, 255, 0.75) !important;
+        background-color: rgba(255, 255, 255, 0.75) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 12px !important;
+    }
+
+    /* Make Upload button inside file uploader subtle/light */
+    div[data-testid="stFileUploader"] button {
+        background: white !important;
+        color: #C2E5F7 !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        font-weight: 500 !important;
+    }
+
+    div[data-testid="stFileUploader"] button * {
+        color: #C2E5F7 !important;
+    }
+
+    div[data-testid="stFileUploader"] button:hover {
+        background: #f8f8f8 !important;
+        border-color: #ccc !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    div[data-testid="stFileUploader"]:hover {
+        border-color: #ff80ab !important;
+        background: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    /* ── Stat Cards ── */
     .stat-row {
         display: flex;
-        gap: 1rem;
+        gap: 14px;
         margin: 1.5rem 0;
     }
+
     .stat-card {
         flex: 1;
-        background: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(139,92,246,0.08));
-        border: 1px solid rgba(139,92,246,0.18);
-        border-radius: 14px;
-        padding: 1.1rem 1.25rem;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 16px;
+        padding: 1.2rem;
         text-align: center;
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 16px rgba(255, 120, 160, 0.08);
     }
+
+    .stat-card:hover {
+        background: rgba(255, 255, 255, 0.65);
+        border-color: rgba(255, 128, 171, 0.5);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(255, 120, 160, 0.18);
+    }
+
     .stat-card .stat-value {
-        font-size: 1.75rem;
+        font-size: 2.2rem;
         font-weight: 700;
-        color: #a78bfa;
+        color: #C2E5F7;
+        line-height: 1;
     }
+
     .stat-card .stat-label {
-        font-size: 0.78rem;
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin-top: 0.2rem;
-    }
-
-    /* ── Chat Messages ──────────────────────────────────── */
-    .user-msg {
-        background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.10));
-        border: 1px solid rgba(139,92,246,0.2);
-        border-radius: 16px;
-        padding: 1rem 1.25rem;
-        margin: 0.5rem 0;
-    }
-    .assistant-msg {
-        background: rgba(30, 32, 48, 0.6);
-        border: 1px solid rgba(148,163,184,0.1);
-        border-radius: 16px;
-        padding: 1rem 1.25rem;
-        margin: 0.5rem 0;
-    }
-
-    /* ── Source Cards ────────────────────────────────────── */
-    .source-card {
-        background: rgba(15, 17, 28, 0.7);
-        border: 1px solid rgba(139,92,246,0.12);
-        border-radius: 12px;
-        padding: 0.85rem 1rem;
-        margin: 0.4rem 0;
-        font-size: 0.88rem;
-        color: #cbd5e1;
-    }
-    .source-card .source-header {
-        font-weight: 600;
-        color: #a78bfa;
-        font-size: 0.8rem;
-        margin-bottom: 0.35rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
-    /* ── Sidebar ────────────────────────────────────────── */
-    section[data-testid="stSidebar"] {
-        border-right: 1px solid rgba(139,92,246,0.12);
-    }
-    .sidebar-header {
-        font-size: 0.8rem;
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-weight: 600;
-        margin: 1.5rem 0 0.5rem;
-    }
-    .indexed-doc {
-        background: rgba(99,102,241,0.08);
-        border: 1px solid rgba(139,92,246,0.12);
-        border-radius: 8px;
-        padding: 0.5rem 0.75rem;
-        margin: 0.3rem 0;
-        font-size: 0.85rem;
-        color: #c4b5fd;
-    }
-
-    /* ── Image Thumbnails ───────────────────────────────── */
-    .image-grid {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        margin-top: 0.5rem;
-    }
-    .image-thumb {
-        border: 1px solid rgba(139,92,246,0.2);
-        border-radius: 10px;
-        overflow: hidden;
-        max-width: 200px;
-    }
-    .image-thumb img {
-        width: 100%;
-        display: block;
-    }
-    .image-caption {
         font-size: 0.72rem;
-        color: #94a3b8;
-        padding: 0.3rem 0.5rem;
-        text-align: center;
-        background: rgba(15, 17, 28, 0.8);
+        font-weight: 700;
+        color: #C2E5F7;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 5px;
     }
 
-    /* ── Misc ───────────────────────────────────────────── */
-    .divider {
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(139,92,246,0.3), transparent);
-        margin: 1.5rem 0;
+    /* ── Indexed doc items ── */
+    .indexed-doc {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 180, 200, 0.5);
+        border-radius: 10px;
+        padding: 0.6rem 0.9rem;
+        margin: 0.3rem 0;
+        font-size: 0.88rem;
+        color: #C2E5F7;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.2s;
     }
-    .empty-state {
+
+    .indexed-doc:hover {
+        background: rgba(255, 255, 255, 0.75);
+        border-color: #ff80ab;
+    }
+
+    /* ── Header ── */
+    .app-header {
         text-align: center;
-        color: #64748b;
-        padding: 3rem 1rem;
+        padding: 2.5rem 0 1.5rem;
     }
-    .empty-state .icon {
-        font-size: 3rem;
-        margin-bottom: 0.75rem;
+
+    .app-header h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #C2E5F7;
+        letter-spacing: -1px;
+        margin-bottom: 0.4rem;
+        text-shadow: 0 2px 12px rgba(255, 128, 171, 0.3);
     }
-    .empty-state p {
+
+    .app-header p {
+        color: #C2E5F7;
+        font-size: 1.05rem;
+        font-weight: 400;
+    }
+
+    /* ── Chat messages ── */
+    .user-msg {
+        background: rgba(255, 182, 193, 0.55);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 20px 20px 4px 20px;
+        padding: 1rem 1.3rem;
+        margin: 0.8rem 0 0.8rem auto;
+        max-width: 80%;
+        color: #C2E5F7 !important;
+        box-shadow: 0 4px 14px rgba(255, 120, 160, 0.12);
         font-size: 0.95rem;
         line-height: 1.6;
     }
 
-    /* Hide Streamlit default elements */
-    #MainMenu {visibility: hidden;}
+    .assistant-msg {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 20px 20px 20px 4px;
+        padding: 1rem 1.3rem;
+        margin: 0.8rem auto 0.8rem 0;
+        max-width: 85%;
+        color: #C2E5F7 !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .user-msg p, .assistant-msg p { color: inherit !important; }
+
+    /* ── Source cards ── */
+    .source-card {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+        border-left: 3px solid #ff80ab;
+        border-radius: 8px;
+        padding: 0.9rem;
+        margin: 0.4rem 0;
+        font-size: 0.88rem;
+        color: #C2E5F7;
+        transition: all 0.2s;
+    }
+
+    .source-card:hover {
+        background: rgba(255, 255, 255, 0.85);
+        box-shadow: 0 4px 12px rgba(255, 120, 160, 0.12);
+    }
+
+    .source-card .source-header {
+        font-weight: 700;
+        color: #C2E5F7;
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ── Chat input ── */
+    div[data-testid="stBottomBlockContainer"],
+    div[data-testid="stBottomBlockContainer"] *,
+    .stAppBottomBlockContainer,
+    .stAppBottomBlockContainer *,
+    .stBottom,
+    .stBottom * {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+
+    .stChatInput, div[data-testid="stChatInput"] {
+        background: rgba(255, 255, 255, 0.45) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1.5px solid rgba(255, 128, 171, 0.4) !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 24px rgba(255, 120, 160, 0.08) !important;
+    }
+
+    .stChatInput:focus-within, div[data-testid="stChatInput"]:focus-within {
+     
+    }
+
+    .stChatInput textarea, div[data-testid="stChatInput"] textarea {
+        color: #C2E5F7 !important;
+        background: transparent !important;
+        font-family: 'Outfit', sans-serif !important;
+    }
+
+    .stChatInput textarea::placeholder,
+    div[data-testid="stChatInput"] textarea::placeholder {
+        color: rgba(194, 229, 247, 0.5) !important;
+    }
+
+    .stChatInput svg, div[data-testid="stChatInput"] svg {
+        fill: #ff80ab !important;
+    }
+
+    /* ── Divider ── */
+    .divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 150, 180, 0.35), transparent);
+        margin: 1.5rem 0;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 20px;
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 24px rgba(255, 120, 160, 0.08);
+    }
+
+    .empty-state .icon {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .empty-state p { color: #C2E5F7 !important; font-size: 1rem; line-height: 1.8; }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50%       { transform: translateY(-10px); }
+    }
+
+    /* ── Progress bar ── */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #ff80ab, #f06292) !important;
+        border-radius: 8px !important;
+    }
+
+    /* ── Info / success / warning ── */
+    div[data-testid="stAlert"] {
+        background: rgba(255, 255, 255, 0.5) !important;
+        backdrop-filter: blur(12px) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 180, 200, 0.4) !important;
+        color: #C2E5F7 !important;
+    }
 </style>
 """,
-    unsafe_allow_html=True,
-)
+        unsafe_allow_html=True,
+    )
 
 
 # ─── Session State Initialization ────────────────────────────────────────────
@@ -298,7 +520,15 @@ def _process_uploaded_files(uploaded_files):
 
 # ─── Sidebar ─────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 📄 Document Manager")
+    st.markdown('''
+        <h2 style="
+            background: linear-gradient(135deg, #ff80ab, #f06292);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            font-weight: 700;
+        ">📄 Document Manager</h2>
+    ''', unsafe_allow_html=True)
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
     # File uploader
@@ -331,7 +561,14 @@ with st.sidebar:
 
     if indexed_sources:
         for source in indexed_sources:
-            st.markdown(f'<div class="indexed-doc">📑 {source}</div>', unsafe_allow_html=True)
+            col1, col2 = st.columns([0.65, 0.35])
+            with col1:
+                st.markdown(f'<div class="indexed-doc" style="margin:0;">📑 {source}</div>', unsafe_allow_html=True)
+            with col2:
+                if st.button("❌", key=f"del_{source}", help="Delete this file"):
+                    ingest.delete_file(source)
+                    st.session_state.processed_files.discard(source)
+                    st.rerun()
     else:
         st.caption("No documents indexed yet.")
 
@@ -351,14 +588,6 @@ with st.sidebar:
             st.session_state.processed_files = set()
             st.success("Index cleared!")
             st.rerun()
-
-    # API Key status
-    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-    if config.GROQ_API_KEY and config.GROQ_API_KEY != "your-groq-api-key-here":
-        st.markdown("🟢 **API Key:** Connected")
-    else:
-        st.markdown("🔴 **API Key:** Not configured")
-        st.caption("Create a `.env` file with `GROQ_API_KEY=gsk_...`")
 
 
 # ─── Main Area ───────────────────────────────────────────────────────────────
@@ -384,7 +613,7 @@ if not st.session_state.chat_history:
     st.markdown(
         """
     <div class="empty-state">
-        <div class="icon">📚</div>
+        <div class="icon">📄</div>
         <p>
             <strong>Upload a PDF</strong> in the sidebar to get started.<br>
             Once processed, ask any question about your documents —<br>

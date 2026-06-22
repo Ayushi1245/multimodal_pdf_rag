@@ -189,3 +189,39 @@ def ingest_pdf(file_path: str, progress_callback=None) -> tuple[int, int]:
         json.dump(cache, f)
         
     return len(text_chunks), len(image_docs)
+
+def delete_file(file_name: str) -> bool:
+    """
+    Deletes a specific file from the vectorstore, byte_store, and cache.
+    """
+    retriever = get_retriever()
+    
+    try:
+        # 1. Get metadatas to find doc_ids for the byte_store
+        results = retriever.vectorstore._collection.get(where={"source": file_name})
+        if results and results.get("metadatas"):
+            doc_ids = [m.get("doc_id") for m in results["metadatas"] if m.get("doc_id")]
+            if doc_ids:
+                retriever.byte_store.mdelete(doc_ids)
+                
+        # 2. Delete from Chroma vectorstore
+        retriever.vectorstore._collection.delete(where={"source": file_name})
+    except Exception as e:
+        print(f"Error deleting {file_name} from vectorstore: {e}")
+        return False
+        
+    # 3. Remove from cache
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r") as f:
+                cache = json.load(f)
+            if file_name in cache:
+                del cache[file_name]
+                with open(CACHE_FILE, "w") as f:
+                    json.dump(cache, f)
+        except Exception as e:
+            print(f"Error updating cache: {e}")
+            return False
+            
+    return True
+
