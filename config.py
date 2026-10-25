@@ -15,7 +15,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 # ─── Model Configuration ─────────────────────────────────────────────────────
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 SUMMARIZER_MODEL = "llama-3.2-11b-vision-preview"      # Used for image summarization
-ANSWER_MODEL = "llama-3.3-70b-versatile"               # Used for final answer generation
+ANSWER_MODEL = "openai/gpt-oss-120b"               # Used for final answer generation
 
 # ─── Data Storage ────────────────────────────────────────────────────────────
 CHROMA_PERSIST_DIR = os.path.join(os.path.dirname(__file__), "chroma_db")

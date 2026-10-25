@@ -59,11 +59,12 @@ def ask_question(query: str) -> dict:
             text_context = f"[Source {i}: {source}, Page {page_num} — Image Description]\n{doc.page_content}\n\n"
             user_content[0]["text"] += text_context
             
-            # Add image to prompt
-            user_content.append({
-                "type": "image_url",
-                "image_url": {"url": f"data:image/jpeg;base64,{b64_image}"}
-            })
+            # Add image to prompt if model supports vision
+            if "vision" in config.ANSWER_MODEL.lower():
+                user_content.append({
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{b64_image}"}
+                })
             
             image_refs.append({
                 "b64": b64_image,

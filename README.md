@@ -54,7 +54,7 @@ User Query
 │             rag_chain.py                │
 │  Similarity Search → Top 6 Chunks      │
 │  Build Prompt (text + base64 images)   │
-│  Groq llama-3.3-70b-versatile          │
+│  Groq openai/gpt-oss-120b              │
 └─────────────────────────────────────────┘
     │
     ▼
@@ -73,7 +73,7 @@ Answer + Visual Citations in Streamlit UI
 | Image Summarization | Groq `llama-3.2-11b-vision-preview` |
 | Embeddings | HuggingFace `all-MiniLM-L6-v2` |
 | Vector Store | ChromaDB (local) |
-| Chat Model | Groq `llama-3.3-70b-versatile` |
+| Chat Model | Groq `openai/gpt-oss-120b` |
 | Image Storage | LangChain `LocalFileStore` |
 
 ---
@@ -133,5 +133,3 @@ Standard RAG pipelines skip images entirely. For documents like:
 
 ## 📬 Contact
 
-Built by [Ayushi](https://github.com/Ayushi1245) · Open for freelance AI/ML projects
-[ayushi7607053@gmail.com](mailto:ayushi7607053@gmail.com) · [LinkedIn](https://linkedin.com/in/ayushi1245)

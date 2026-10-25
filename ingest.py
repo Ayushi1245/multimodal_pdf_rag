@@ -86,13 +86,13 @@ def get_retriever():
     
     return retriever
 
-def ingest_pdf(file_path: str, progress_callback=None) -> tuple[int, int]:
+def ingest_pdf(file_path: str, original_file_name: str = None, progress_callback=None) -> tuple[int, int]:
     """
     Ingests a PDF by extracting text and images using PyMuPDF.
     Uses Gemini to summarize images.
     Returns (num_text_chunks, num_images).
     """
-    file_name = os.path.basename(file_path)
+    file_name = original_file_name if original_file_name else os.path.basename(file_path)
     file_md5 = get_md5(file_path)
     
     # Check cache

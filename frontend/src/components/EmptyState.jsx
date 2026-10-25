@@ -1,13 +1,24 @@
+import ChatInput from "./ChatInput";
+
 export default function EmptyState() {
   return (
-    <div className="flex-1 bg-surface-container-lowest rounded-3xl border border-dashed border-outline-variant/30 shadow-ambient-1 flex flex-col items-center justify-center p-12 text-center relative overflow-hidden min-h-[300px]">
-      <div className="relative z-10 flex flex-col items-center max-w-lg">
-        <div className="w-20 h-20 mb-lg bg-surface-container-low rounded-2xl flex items-center justify-center border border-outline-variant/20 shadow-sm">
-          <span className="material-symbols-outlined text-[40px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>auto_stories</span>
+    <div className="w-full max-w-4xl mx-auto mt-6 bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/30 shadow-ambient-2 rounded-2xl flex flex-col items-center justify-end relative overflow-hidden min-h-[300px] p-6 z-10 mb-8">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[70%] opacity-90">
+        <div className="w-20 h-24 bg-gradient-to-br from-white/20 to-white/5 rounded-t-lg rounded-br-lg flex flex-col p-3 shadow-lg backdrop-blur-md border border-white/20 relative before:absolute before:-top-[1px] before:-right-[1px] before:w-6 before:h-6 before:bg-surface-container-lowest/80 before:border-l before:border-b before:border-white/20 before:rounded-bl-lg">
+          <div className="w-full h-1.5 bg-primary/40 rounded-full mb-2 mt-2"></div>
+          <div className="w-3/4 h-1.5 bg-primary/40 rounded-full mb-3"></div>
+          <div className="w-full h-10 bg-primary/20 rounded mt-auto flex items-center justify-center p-1 border border-primary/20">
+             <span className="material-symbols-outlined text-primary text-[20px]">image</span>
+          </div>
         </div>
-        <h3 className="font-headline-md text-xl font-semibold text-on-surface mb-3">Upload a PDF in the sidebar to get started.</h3>
-        <p className="font-body-md text-on-surface-variant leading-relaxed">Once processed, ask any question about your documents — the AI will analyze the text, images, and charts to provide detailed insights.</p>
       </div>
+      
+      <ChatInput />
+      
+      <p className="mt-4 text-[13px] text-on-surface-variant text-center max-w-lg">
+        Once processed, ask any question about your documents —<br/>
+        text, images, charts, tables, anything!
+      </p>
     </div>
   );
 }
